@@ -182,4 +182,4 @@ def read_company_profiles_list():
 
 if __name__ == '__main__':
 	# read_company_profiles_list()
-	print(read_company_profiles_list())
+	send_mails_to_files("company-profiles")
