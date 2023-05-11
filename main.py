@@ -61,7 +61,7 @@ def get_email_info(file_path):
 	return email
 
 
-def send_email_with_file(sender, company_profile_path: str, attachment_path, smtp):
+def send_email_with_file(sender, my_name, company_profile_path: str, attachment_path, smtp):
 	email = get_email_info(company_profile_path)
 	if email is None:
 		print(f"Skipping for {company_profile_path} as no email found.")
@@ -76,7 +76,6 @@ def send_email_with_file(sender, company_profile_path: str, attachment_path, smt
 		message_text = f.read()
 		
 	company_name = os.path.basename(company_profile_path).split('.')[0]
-	my_name = "Raghavendra"
 	subject = f"Inquiry about Internship Opportunities at {company_name}"
 	# Company name will be of the format company-name, Make it Company Name
 	company_name = company_name.replace('-', ' ').title()
@@ -114,7 +113,7 @@ def get_all_files(path):
 	return files
 
 
-def send_mails_to_files(path_to_company_profiles):
+def send_mails_to_files(path_to_company_profiles, username, password, my_name, resume_file: str):
 	
 	all_company_profiles = get_all_files(path_to_company_profiles)
 	log_data = {}
@@ -123,8 +122,7 @@ def send_mails_to_files(path_to_company_profiles):
 		with open('log_data.json', 'r') as f:
 			log_data = json.load(f)
 	
-	smtp_obj = setup_smtp_server('Raghavendrar403@gmail.com',
-	                             'dcabkmchqkbtecjq')
+	smtp_obj = setup_smtp_server(username, password)
 	
 	dict_countries = read_company_profiles_list()
 	for company_profile in all_company_profiles:
@@ -140,9 +138,10 @@ def send_mails_to_files(path_to_company_profiles):
 			continue
 	
 		res = send_email_with_file(
-			'Raghavendrar403@gmail.com',
+			username,
+			my_name,
 			company_profile,
-			"Resume.pdf",
+			resume_file,
 			smtp_obj
 		)
 		if res is True:
@@ -182,4 +181,8 @@ def read_company_profiles_list():
 
 if __name__ == '__main__':
 	# read_company_profiles_list()
-	send_mails_to_files("company-profiles")
+	username = "my_Email@gmail.com"
+	password = "niggawithdownsyndrome"
+	resume_file = "resume.pdf" # Path to your resume pdf
+	my_name = "Chris Pratt"
+	send_mails_to_files("company-profiles", username, password, my_name, resume_file)
